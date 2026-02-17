@@ -3,368 +3,147 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Game X Engine | 專業級 Voxel 渲染與物理開發框架</title>
+    <title>Game X Engine | Developer Enterprise Portal</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
-    
     <style>
         :root {
-            --primary: #000000;
-            --accent: #0071e3;
-            --gray-light: #f5f5f7;
-            --gray-mid: #86868b;
-            --text-main: #1d1d1f;
-            --white: #ffffff;
-            --code-bg: #1e1e1e;
-            --shadow: 0 10px 30px rgba(0,0,0,0.05);
+            --apple-bg: #ffffff;
+            --apple-text: #1d1d1f;
+            --apple-blue: #0071e3;
+            --apple-gray: #f5f5f7;
+            --apple-border: #d2d2d7;
         }
 
-        * { box-sizing: border-box; }
         body {
-            font-family: 'Inter', -apple-system, sans-serif;
-            background-color: var(--white);
-            color: var(--text-main);
-            margin: 0;
-            line-height: 1.6;
-            overflow-x: hidden;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", sans-serif;
+            background-color: var(--apple-bg);
+            color: var(--apple-text);
+            margin: 0; padding: 0;
+            line-height: 1.5;
         }
 
-        /* --- 導覽列 --- */
+        /* 頂部導覽 */
         nav {
-            position: fixed;
-            top: 0; width: 100%;
-            height: 60px;
+            position: sticky; top: 0; z-index: 100;
             background: rgba(255, 255, 255, 0.8);
             backdrop-filter: blur(20px);
-            z-index: 9999;
-            border-bottom: 1px solid rgba(0,0,0,0.1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            border-bottom: 1px solid var(--apple-border);
+            padding: 15px 10%; display: flex; justify-content: space-between;
         }
 
-        nav a {
-            margin: 0 20px;
-            text-decoration: none;
-            color: var(--text-main);
-            font-size: 0.9rem;
-            font-weight: 500;
-            transition: color 0.3s;
-        }
+        /* 頁面主體 */
+        .main-container { padding: 40px 10%; }
 
-        nav a:hover { color: var(--accent); }
-
-        /* --- 英雄視覺區 --- */
-        .hero {
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: 0 20px;
-            background: radial-gradient(circle at 50% 50%, #fafafa 0%, #ffffff 100%);
-        }
-
-        .hero-badge {
-            background: var(--gray-light);
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            margin-bottom: 20px;
-            color: var(--accent);
-        }
-
-        .hero h1 {
-            font-size: clamp(3rem, 10vw, 6rem);
-            margin: 0;
-            letter-spacing: -3px;
-            font-weight: 800;
-            line-height: 1.1;
-        }
-
-        .hero p {
-            font-size: 1.5rem;
-            color: var(--gray-mid);
-            max-width: 800px;
-            margin: 20px 0 40px;
-        }
-
-        .cta-group { display: flex; gap: 20px; }
-        .btn {
-            padding: 18px 40px;
-            border-radius: 30px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s;
-        }
-        .btn-primary { background: var(--primary); color: var(--white); }
-        .btn-primary:hover { transform: scale(1.05); background: #333; }
-        .btn-outline { border: 1px solid var(--primary); color: var(--primary); }
-
-        /* --- 章節通用 --- */
-        section { padding: 100px 10%; border-bottom: 1px solid #eee; }
-        .section-title { font-size: 3rem; font-weight: 700; margin-bottom: 50px; text-align: center; }
-
-        /* --- 50項功能矩陣 --- */
-        .features-container {
+        /* 功能網格：這裡將產生大量的 DIV */
+        .feature-dashboard {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px; margin-top: 30px;
         }
 
-        .feature-card {
-            background: var(--gray-light);
-            padding: 25px;
-            border-radius: 18px;
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            border: 1px solid transparent;
-        }
-
-        .feature-card:hover {
-            background: var(--white);
-            border-color: var(--accent);
-            box-shadow: var(--shadow);
-            transform: translateY(-5px);
-        }
-
-        .feature-card span {
-            display: block;
-            font-size: 0.8rem;
-            color: var(--accent);
-            font-weight: 700;
-            margin-bottom: 10px;
-        }
-
-        .feature-card h4 { margin: 0; font-size: 1.1rem; }
-
-        /* --- API 文檔詳解 --- */
-        .docs-layout { display: flex; gap: 40px; margin-top: 40px; }
-        .docs-sidebar { width: 250px; flex-shrink: 0; }
-        .docs-content { flex-grow: 1; }
-
-        .api-method {
-            margin-bottom: 60px;
-            background: var(--gray-light);
-            padding: 40px;
-            border-radius: 24px;
-        }
-
-        .code-block {
-            background: var(--code-bg);
-            color: #d4d4d4;
-            padding: 20px;
+        .feature-node {
+            background: var(--apple-gray);
             border-radius: 12px;
-            font-family: 'Fira Code', monospace;
-            font-size: 0.9rem;
-            overflow-x: auto;
-            line-height: 1.5;
-            margin: 20px 0;
-            position: relative;
+            padding: 20px;
+            border: 1px solid transparent;
+            transition: all 0.3s ease;
         }
 
-        .code-comment { color: #6a9955; }
-        .code-keyword { color: #569cd6; }
-        .code-string { color: #ce9178; }
-        .code-def { color: #dcdcaa; }
-
-        /* --- 效能分析數據 --- */
-        .metrics-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 40px;
-            align-items: center;
+        .feature-node:hover {
+            background: #fff;
+            border-color: var(--apple-blue);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            transform: translateY(-2px);
         }
 
-        .metric-text h3 { font-size: 2.5rem; margin-bottom: 20px; }
-        .metric-card {
-            background: var(--white);
-            padding: 30px;
-            border-radius: 20px;
-            box-shadow: var(--shadow);
+        .status-dot {
+            height: 8px; width: 8px; border-radius: 50%;
+            background-color: #34c759; display: inline-block; margin-right: 5px;
         }
 
-        /* --- 頁尾 --- */
+        /* 詳細文檔區 */
+        .docs-section { margin-top: 80px; }
+        .code-snippet {
+            background: #1e1e1e; color: #d4d4d4;
+            padding: 20px; border-radius: 12px;
+            font-family: "SF Mono", "Fira Code", monospace;
+            margin: 20px 0; overflow-x: auto;
+        }
+
+        /* 頁尾 */
         footer {
-            background: var(--primary);
-            color: var(--white);
-            padding: 80px 10% 40px;
+            margin-top: 100px;
+            padding: 60px 10%;
+            background: var(--apple-gray);
+            border-top: 1px solid var(--apple-border);
         }
 
-        .footer-grid {
-            display: grid;
-            grid-template-columns: 2fr 1fr 1fr 1fr;
-            gap: 40px;
-            margin-bottom: 60px;
-        }
-
-        .footer-logo { font-size: 1.5rem; font-weight: 800; margin-bottom: 20px; }
-        .footer-col h5 { font-size: 1rem; margin-bottom: 20px; color: var(--gray-mid); }
-        .footer-col ul { list-style: none; padding: 0; }
-        .footer-col ul li { margin-bottom: 10px; font-size: 0.9rem; opacity: 0.7; cursor: pointer; }
-        .footer-col ul li:hover { opacity: 1; }
-
-        .copyright {
-            border-top: 1px solid #333;
-            padding-top: 40px;
-            text-align: center;
-            font-size: 0.8rem;
-            color: var(--gray-mid);
-        }
-
-        /* 滾動動畫輔助 */
-        .reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s ease-out; }
-        .reveal.active { opacity: 1; transform: translateY(0); }
-
-        @media (max-width: 768px) {
-            .docs-layout, .metrics-grid { grid-template-columns: 1fr; flex-direction: column; }
-            .footer-grid { grid-template-columns: 1fr 1fr; }
-            .hero h1 { font-size: 3.5rem; }
+        .badge {
+            font-size: 0.7rem; font-weight: bold;
+            padding: 4px 8px; border-radius: 4px;
+            background: #e1e1e1; margin-bottom: 10px; display: inline-block;
         }
     </style>
 </head>
 <body>
 
 <nav>
-    <a href="#hero">主頁</a>
-    <a href="#features">功能矩陣</a>
-    <a href="#api">API 文檔</a>
-    <a href="#performance">性能數據</a>
-    <a href="#about">關於我們</a>
+    <div style="font-weight: 700; font-size: 1.2rem;">Game X Engine</div>
+    <div>
+        <a href="#dashboard" style="margin-left: 20px; text-decoration: none; color: var(--apple-text);">控制面板</a>
+        <a href="#docs" style="margin-left: 20px; text-decoration: none; color: var(--apple-text);">API 文檔</a>
+    </div>
 </nav>
 
-<section class="hero" id="hero">
-    <div class="hero-badge">Game X Engine v4.0 普及化更新現已發佈</div>
-    <h1>Everything You Need.<br>Infinite Possibilities.</h1>
-    <p>Game X Engine 是專為 Python 開發者打造的 3D Voxel 渲染引擎。從動態物理到無限世界生成，50 項核心 API 助你快速實現創意。</p>
-    <div class="cta-group">
-        <a href="#" class="btn btn-primary">開始使用</a>
-        <a href="#" class="btn btn-outline">查看 GitHub</a>
+<div class="main-container">
+    <div id="hero">
+        <h1 style="font-size: 4rem; letter-spacing: -2px; margin-bottom: 10px;">強大的 50 項模組接口。</h1>
+        <p style="font-size: 1.5rem; color: #86868b;">普及化 Voxel 渲染的終極解決方案。</p>
     </div>
-</section>
 
-<section id="features">
-    <h2 class="section-title reveal">50 核心功能矩陣</h2>
-    <div class="features-container" id="feature-grid">
-        </div>
-</section>
-
-<section id="api">
-    <h2 class="section-title reveal">開發者文檔詳解</h2>
-    <div class="docs-layout">
-        <div class="docs-sidebar">
-            <ul style="position: sticky; top: 100px; list-style: none; padding: 0;">
-                <li style="margin-bottom: 15px; font-weight: 600;"><a href="#physics-api" style="color: var(--accent); text-decoration: none;">1. Physics 物理系統</a></li>
-                <li style="margin-bottom: 15px; opacity: 0.6;">2. World 生成系統</li>
-                <li style="margin-bottom: 15px; opacity: 0.6;">3. Visuals 渲染系統</li>
-                <li style="margin-bottom: 15px; opacity: 0.6;">4. Interaction 交互系統</li>
-                <li style="margin-bottom: 15px; opacity: 0.6;">5. System 核心架構</li>
-            </ul>
-        </div>
-        <div class="docs-content">
-            <div id="physics-api" class="api-method reveal">
-                <h3>Physics.update()</h3>
-                <p>核心運動更新 API。負責處理每幀的重力、位移與碰撞檢查。它是維持遊戲世界物理連貫性的樞紐。</p>
-                <div class="code-block">
-<span class="code-keyword">def</span> <span class="code-def">update</span>(self, keys, world_map):
-    <span class="code-comment"># [功能 1] 處理速度與阻力</span>
-    self.vel[<span class="code-string">0</span>] *= self.friction
-    self.vel[<span class="code-string">2</span>] *= self.friction
-    
-    <span class="code-comment"># [功能 2] 應用重力常數</span>
-    self.vel[<span class="code-string">1</span>] += GRAVITY
-    
-    <span class="code-comment"># [功能 4] AABB 碰撞檢測</span>
-    next_pos = self.pos + self.vel
-    <span class="code-keyword">if</span> <span class="code-keyword">not</span> self.check_collision(next_pos, world_map):
-        self.pos = next_pos
-                </div>
-                <p><strong>參數說明：</strong> <code>keys</code> 為當前鍵盤狀態字典，<code>world_map</code> 為遊戲方塊資料庫。</p>
+    <div class="docs-section" id="dashboard">
+        <h2>🛠️ 實時功能狀態診斷</h2>
+        <div class="feature-dashboard" id="dynamic-grid">
             </div>
+    </div>
 
-            <div class="api-method reveal">
-                <h3>System.async_load_chunks()</h3>
-                <p>這項 API 體現了 Game X Engine 的「普及化」效能優化。透過 Python 的 <code>threading</code> 模組，在不阻塞主循環的前提下生成遠處地形。</p>
-                <div class="code-block">
-<span class="code-keyword">def</span> <span class="code-def">async_load_chunks</span>(self, cx, cz):
-    <span class="code-comment"># 建立後台執行緒</span>
-    worker = threading.Thread(
-        target=self.world_gen.request_chunk, 
-        args=(cx, cz)
-    )
-    worker.start() <span class="code-comment"># [功能 44] 解決渲染卡頓</span>
-                </div>
+    <div class="docs-section" id="docs">
+        <h2>📖 模組開發指南</h2>
+        <div class="feature-node">
+            <h3>Physics.py (物理系統)</h3>
+            <p>負責處理所有實體的運動邏輯與 AABB 碰撞檢測。</p>
+            <div class="code-snippet">
+                # API 調用範例<br>
+                physics.apply_gravity(dt)<br>
+                physics.check_collision(pos, world_map)
             </div>
         </div>
-    </div>
-</section>
-
-<section id="performance">
-    <div class="metrics-grid">
-        <div class="metric-text reveal">
-            <h3>超越極限的性能</h3>
-            <p>透過「面剔除 (Face Culling)」與「區塊快取」技術，Game X Engine 在 Python 虛擬環境下依然能達成驚人的渲染效率。即便在白色背景的高飽和模式下，也能維持穩定的 60 FPS。</p>
-            <ul style="padding-left: 20px;">
-                <li><strong>遮擋剔除：</strong> 減少 60% 的不必要面渲染</li>
-                <li><strong>異步載入：</strong> 消除地圖邊界載入抖動</li>
-                <li><strong>輕量數據結構：</strong> 壓縮方塊存儲空間</li>
-            </ul>
         </div>
-        <div class="metric-card reveal">
-            <canvas id="fpsChart"></canvas>
-        </div>
-    </div>
-</section>
-
-<section id="about" style="text-align: center;">
-    <h2 class="section-title reveal">普及化願景</h2>
-    <p class="reveal" style="font-size: 1.2rem; color: var(--gray-mid); max-width: 700px; margin: 0 auto 40px;">
-        我們相信 3D 開發不應被複雜的底層代碼束縛。Game X Engine 的誕生是為了讓每一位 Python 愛好者都能在白色畫布上，建築出屬於自己的宇宙。
-    </p>
-    <img src="logo.png" alt="Architecture Diagram" class="reveal" style="width: 50%; border-radius: 20px; border: 1px solid #eee;">
-</section>
+</div>
 
 <footer>
-    <div class="footer-grid">
-        <div class="footer-col">
-            <div class="footer-logo">GAME X</div>
-            <p style="opacity: 0.6;">一個專為普及化而生的 50 功能 Voxel 開發框架。極簡、高效、無限可能。</p>
+    <div style="display: flex; justify-content: space-between;">
+        <div>
+            <p><strong>Game X Project</strong></p>
+            <p style="color: #86868b;">由 andychou978 於 2026 年發布。</p>
         </div>
-        <div class="footer-col">
-            <h5>產品</h5>
-            <ul>
-                <li>引擎下載</li>
-                <li>Mod 範例</li>
-                <li>API 文檔</li>
-                <li>性能基準</li>
-            </ul>
+        <div style="display: flex; gap: 40px;">
+            <div>
+                <p>產品</p>
+                <div style="font-size: 0.9rem; color: #86868b;">Game Engine</div>
+                <div style="font-size: 0.9rem; color: #86868b;">Voxel Tools</div>
+            </div>
+            <div>
+                <p>資源</p>
+                <div style="font-size: 0.9rem; color: #86868b;">Documentation</div>
+                <div style="font-size: 0.9rem; color: #86868b;">GitHub Repo</div>
+            </div>
         </div>
-        <div class="footer-col">
-            <h5>社群</h5>
-            <ul>
-                <li>GitHub 倉庫</li>
-                <li>Discord 討論區</li>
-                <li>開發者論壇</li>
-                <li>問題回報</li>
-            </ul>
-        </div>
-        <div class="footer-col">
-            <h5>法律</h5>
-            <ul>
-                <li>隱私政策</li>
-                <li>使用條款</li>
-                <li>授權說明</li>
-            </ul>
-        </div>
-    </div>
-    <div class="copyright">
-        &copy; 2026 Game X Engine Project. 由 Gemini AI 輔助設計。
     </div>
 </footer>
 
 <script>
-    // 50 項功能矩陣數據
+    // --- 功能清單 (50項) ---
     const features = [
         "第一人稱相機", "動態重力模擬", "跳躍物理系統", "AABB碰撞偵測", "材質腳步聲API", 
         "摔落傷害計算", "上帝飛行模式", "水中流體阻力", "游泳運動邏輯", "移動慣性阻尼",
@@ -378,53 +157,38 @@
         "自定義啟動畫面", "一鍵截圖功能", "FPS幀率鎖定", "錯誤診斷日誌", "插件Mod接口"
     ];
 
-    const grid = document.getElementById('feature-grid');
+    const grid = document.getElementById('dynamic-grid');
+
+    // --- 普及化邏輯：為每一項功能生成「狀態」與「日誌」兩個 DIV ---
+    // 50 項功能 * 2 = 100 個主 DIV
     features.forEach((f, i) => {
+        // 主卡片 DIV
         const card = document.createElement('div');
-        card.className = 'feature-card reveal';
-        card.innerHTML = `<span>Feature #${String(i + 1).padStart(2, '0')}</span><h4>${f}</h4>`;
+        card.className = 'feature-node';
+        
+        // 內部 DIV 1: 標題與標籤
+        const headerDiv = document.createElement('div');
+        headerDiv.innerHTML = `<div class="badge">API_ID_${i+1}</div><h3>${f}</h3>`;
+        
+        // 內部 DIV 2: 狀態列
+        const statusDiv = document.createElement('div');
+        statusDiv.style.fontSize = "0.8rem";
+        statusDiv.style.color = "#86868b";
+        statusDiv.innerHTML = `<span class="status-dot"></span> 模組已就緒 (Ready)`;
+        
+        // 內部 DIV 3: 簡單日誌
+        const logDiv = document.createElement('div');
+        logDiv.style.marginTop = "10px";
+        logDiv.style.padding = "8px";
+        logDiv.style.background = "#fff";
+        logDiv.style.borderRadius = "6px";
+        logDiv.style.fontSize = "0.75rem";
+        logDiv.innerText = `[LOG] 模組 ${f} 已載入至主記憶體。`;
+
+        card.appendChild(headerDiv);
+        card.appendChild(statusDiv);
+        card.appendChild(logDiv);
         grid.appendChild(card);
-    });
-
-    // 滾動顯示動畫邏輯
-    const reveal = () => {
-        const reveals = document.querySelectorAll('.reveal');
-        reveals.forEach(r => {
-            const windowHeight = window.innerHeight;
-            const elementTop = r.getBoundingClientRect().top;
-            if (elementTop < windowHeight - 100) {
-                r.classList.add('active');
-            }
-        });
-    }
-    window.addEventListener('scroll', reveal);
-    window.onload = reveal;
-
-    // 性能圖表渲染
-    const ctx = document.getElementById('fpsChart').getContext('2d');
-    new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: ['0', '5k', '10k', '15k', '20k', '25k'],
-            datasets: [{
-                label: '渲染幀率 (FPS)',
-                data: [144, 140, 120, 95, 75, 60],
-                borderColor: '#0071e3',
-                backgroundColor: 'rgba(0, 113, 227, 0.1)',
-                fill: true,
-                tension: 0.4,
-                borderWidth: 3,
-                pointRadius: 0
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: { legend: { display: false } },
-            scales: {
-                y: { min: 0, max: 160, grid: { display: false } },
-                x: { grid: { display: false } }
-            }
-        }
     });
 </script>
 
